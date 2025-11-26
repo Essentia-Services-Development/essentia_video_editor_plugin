@@ -1,0 +1,27 @@
+[package]
+name = "essentia_video_editor_plugin"
+version = "0.1.0"
+edition = "2024"
+authors = ["Essentia Services Development <dev@essentia.services>"]
+description = "AI-enhanced video editing with GPU acceleration"
+license = "MIT"
+repository = "https://github.com/Essentia-Services-Development/essentia_video_editor_plugin"
+keywords = ["essentia", "video", "editing", "gpu", "plugin"]
+categories = ["multimedia", "graphics"]
+
+[dependencies]
+essentia_core = { path = "../../core/essentia_core" }
+essentia_traits = { path = "../../core/essentia_traits" }
+essentia_plugin_system = { path = "../../core/essentia_plugin_system" }
+essentia_ffui = { path = "../../ui/essentia_ffui" }
+essentia_gpu_accel_kernel = { path = "../../core/essentia_gpu_accel_kernel" }
+
+[dev-dependencies]
+
+[features]
+default = []
+gpu = []
+
+[lib]
+name = "essentia_video_editor_plugin"
+path = "src/lib.rs"
