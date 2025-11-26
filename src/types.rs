@@ -4,55 +4,55 @@
 #[derive(Debug, Clone)]
 pub struct VideoClip {
     /// Clip identifier.
-    pub id: u64,
+    pub id:           u64,
     /// Source file path.
-    pub source_path: String,
+    pub source_path:  String,
     /// Duration in milliseconds.
-    pub duration_ms: u64,
+    pub duration_ms:  u64,
     /// Start position in source (trimming).
-    pub in_point_ms: u64,
+    pub in_point_ms:  u64,
     /// End position in source (trimming).
     pub out_point_ms: u64,
     /// Video format.
-    pub format: VideoFormat,
+    pub format:       VideoFormat,
     /// Resolution.
-    pub resolution: Resolution,
+    pub resolution:   Resolution,
     /// Frame rate.
-    pub frame_rate: FrameRate,
+    pub frame_rate:   FrameRate,
 }
 
 /// Audio clip representation.
 #[derive(Debug, Clone)]
 pub struct AudioClip {
     /// Clip identifier.
-    pub id: u64,
+    pub id:          u64,
     /// Source file path.
     pub source_path: String,
     /// Duration in milliseconds.
     pub duration_ms: u64,
     /// Audio format.
-    pub format: AudioFormat,
+    pub format:      AudioFormat,
     /// Sample rate.
     pub sample_rate: u32,
     /// Channels.
-    pub channels: u8,
+    pub channels:    u8,
 }
 
 /// Timeline track.
 #[derive(Debug, Clone)]
 pub struct TimelineTrack {
     /// Track identifier.
-    pub id: u64,
+    pub id:         u64,
     /// Track name.
-    pub name: String,
+    pub name:       String,
     /// Track type.
     pub track_type: TrackType,
     /// Is track muted.
-    pub muted: bool,
+    pub muted:      bool,
     /// Is track locked.
-    pub locked: bool,
+    pub locked:     bool,
     /// Track clips.
-    pub clips: Vec<TimelineClip>,
+    pub clips:      Vec<TimelineClip>,
 }
 
 /// Track type.
@@ -68,9 +68,9 @@ pub enum TrackType {
 #[derive(Debug, Clone)]
 pub struct TimelineClip {
     /// Reference to source clip ID.
-    pub clip_id: u64,
+    pub clip_id:     u64,
     /// Position on timeline (ms).
-    pub position: TimelinePosition,
+    pub position:    TimelinePosition,
     /// Duration on timeline (ms).
     pub duration_ms: u64,
 }
@@ -124,7 +124,7 @@ pub enum AudioFormat {
 /// Video resolution.
 #[derive(Debug, Clone, Copy)]
 pub struct Resolution {
-    pub width: u32,
+    pub width:  u32,
     pub height: u32,
 }
 
@@ -143,7 +143,7 @@ impl Default for Resolution {
 /// Frame rate.
 #[derive(Debug, Clone, Copy)]
 pub struct FrameRate {
-    pub numerator: u32,
+    pub numerator:   u32,
     pub denominator: u32,
 }
 

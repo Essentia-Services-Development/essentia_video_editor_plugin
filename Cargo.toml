@@ -6,6 +6,7 @@ authors = ["Essentia Services Development <dev@essentia.services>"]
 description = "AI-enhanced video editing with GPU acceleration"
 license = "MIT"
 repository = "https://github.com/Essentia-Services-Development/essentia_video_editor_plugin"
+readme = "README.md"
 keywords = ["essentia", "video", "editing", "gpu", "plugin"]
 categories = ["multimedia", "graphics"]
 

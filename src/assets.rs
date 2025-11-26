@@ -1,23 +1,21 @@
 //! Asset library management.
 
-use crate::errors::{VideoEditorError, VideoEditorResult};
-use crate::types::{AudioClip, VideoClip};
+use crate::{
+    errors::{VideoEditorError, VideoEditorResult},
+    types::{AudioClip, VideoClip},
+};
 
 /// Asset library for managing media files.
 pub struct AssetLibrary {
-    video_clips: Vec<VideoClip>,
-    audio_clips: Vec<AudioClip>,
+    video_clips:  Vec<VideoClip>,
+    audio_clips:  Vec<AudioClip>,
     next_clip_id: u64,
 }
 
 impl AssetLibrary {
     /// Create a new asset library.
     pub fn new() -> Self {
-        Self {
-            video_clips: Vec::new(),
-            audio_clips: Vec::new(),
-            next_clip_id: 1,
-        }
+        Self { video_clips: Vec::new(), audio_clips: Vec::new(), next_clip_id: 1 }
     }
 
     /// Import a video file.

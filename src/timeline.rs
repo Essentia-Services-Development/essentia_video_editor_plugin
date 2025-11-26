@@ -1,23 +1,18 @@
 //! Timeline management.
 
-use crate::errors::VideoEditorResult;
 use crate::types::{TimelineTrack, TrackType};
 
 /// Timeline manager.
 pub struct TimelineManager {
-    tracks: Vec<TimelineTrack>,
+    tracks:        Vec<TimelineTrack>,
     next_track_id: u64,
-    duration_ms: u64,
+    duration_ms:   u64,
 }
 
 impl TimelineManager {
     /// Create a new timeline manager.
     pub fn new() -> Self {
-        Self {
-            tracks: Vec::new(),
-            next_track_id: 1,
-            duration_ms: 0,
-        }
+        Self { tracks: Vec::new(), next_track_id: 1, duration_ms: 0 }
     }
 
     /// Add a new track.
@@ -59,7 +54,8 @@ impl TimelineManager {
 
     /// Update timeline duration based on clips.
     pub fn recalculate_duration(&mut self) {
-        self.duration_ms = self.tracks
+        self.duration_ms = self
+            .tracks
             .iter()
             .flat_map(|t| &t.clips)
             .map(|c| c.position.ms + c.duration_ms)

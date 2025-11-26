@@ -4,11 +4,11 @@
 #[derive(Debug, Clone)]
 pub struct VideoEffect {
     /// Effect identifier.
-    pub id: u64,
+    pub id:          u64,
     /// Effect type.
     pub effect_type: EffectType,
     /// Effect parameters.
-    pub parameters: Vec<(String, f64)>,
+    pub parameters:  Vec<(String, f64)>,
 }
 
 /// Effect type.
@@ -30,17 +30,14 @@ pub enum EffectType {
 
 /// Effects pipeline for video processing.
 pub struct EffectsPipeline {
-    effects: Vec<VideoEffect>,
+    effects:        Vec<VideoEffect>,
     next_effect_id: u64,
 }
 
 impl EffectsPipeline {
     /// Create a new effects pipeline.
     pub fn new() -> Self {
-        Self {
-            effects: Vec::new(),
-            next_effect_id: 1,
-        }
+        Self { effects: Vec::new(), next_effect_id: 1 }
     }
 
     /// Add an effect.
@@ -48,11 +45,7 @@ impl EffectsPipeline {
         let id = self.next_effect_id;
         self.next_effect_id += 1;
 
-        self.effects.push(VideoEffect {
-            id,
-            effect_type,
-            parameters: Vec::new(),
-        });
+        self.effects.push(VideoEffect { id, effect_type, parameters: Vec::new() });
 
         id
     }

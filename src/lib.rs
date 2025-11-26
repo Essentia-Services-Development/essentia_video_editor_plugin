@@ -29,26 +29,26 @@
 //! └─────────────────────────────────────────────────────────────┘
 //! ```
 
-mod types;
-mod errors;
-mod config;
-mod timeline;
 mod assets;
+mod config;
 mod effects;
+mod errors;
 mod gpu_pipeline;
 mod plugin;
+mod timeline;
+mod types;
 
-pub use types::{
-    VideoClip, AudioClip, TimelineTrack, TimelinePosition,
-    VideoFormat, AudioFormat, Resolution, FrameRate,
-};
-pub use errors::{VideoEditorError, VideoEditorResult};
-pub use config::VideoEditorConfig;
-pub use timeline::TimelineManager;
 pub use assets::AssetLibrary;
+pub use config::VideoEditorConfig;
 pub use effects::EffectsPipeline;
+pub use errors::{VideoEditorError, VideoEditorResult};
 pub use gpu_pipeline::GpuPipeline;
 pub use plugin::VideoEditorPlugin;
+pub use timeline::TimelineManager;
+pub use types::{
+    AudioClip, AudioFormat, FrameRate, Resolution, TimelinePosition, TimelineTrack, VideoClip,
+    VideoFormat,
+};
 
 #[cfg(test)]
 mod tests {
