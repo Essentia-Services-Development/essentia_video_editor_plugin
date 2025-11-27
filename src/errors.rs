@@ -17,6 +17,32 @@ pub enum VideoEditorError {
     Export(String),
     /// IO error.
     Io(String),
+    /// Unsupported format error (CR-015).
+    UnsupportedFormat(String),
+    /// Conversion error (CR-015).
+    Conversion(String),
+    /// Decoder error (CR-015).
+    Decoder(String),
+}
+
+impl VideoEditorError {
+    /// Create an unsupported format error
+    #[must_use]
+    pub fn unsupported_format(msg: impl Into<String>) -> Self {
+        Self::UnsupportedFormat(msg.into())
+    }
+
+    /// Create a conversion error
+    #[must_use]
+    pub fn conversion(msg: impl Into<String>) -> Self {
+        Self::Conversion(msg.into())
+    }
+
+    /// Create a decoder error
+    #[must_use]
+    pub fn decoder(msg: impl Into<String>) -> Self {
+        Self::Decoder(msg.into())
+    }
 }
 
 impl fmt::Display for VideoEditorError {
@@ -28,6 +54,9 @@ impl fmt::Display for VideoEditorError {
             Self::Gpu(msg) => write!(f, "GPU error: {msg}"),
             Self::Export(msg) => write!(f, "Export error: {msg}"),
             Self::Io(msg) => write!(f, "IO error: {msg}"),
+            Self::UnsupportedFormat(msg) => write!(f, "Unsupported format: {msg}"),
+            Self::Conversion(msg) => write!(f, "Conversion error: {msg}"),
+            Self::Decoder(msg) => write!(f, "Decoder error: {msg}"),
         }
     }
 }
