@@ -11,6 +11,10 @@
 //! - MOV (ProRes, H.264)
 //! - MKV (VP9, AV1)
 //! - AVI (legacy support)
+
+// Allow unused input_path in placeholder implementations - will be used when actual codec is
+// integrated
+#![allow(unused_variables)]
 //! - WebM (VP8/VP9)
 //!
 //! ### Image Formats

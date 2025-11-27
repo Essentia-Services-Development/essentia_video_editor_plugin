@@ -208,10 +208,10 @@ impl FlexForgeIntegration for VideoEditorFlexForge {
 
     fn on_panel_deactivate(&mut self) {
         // Release GPU resources if streaming stops
-        if self.stream_active {
-            if let Some(id) = self.stream_id {
-                let _ = self.stop_stream(id);
-            }
+        if self.stream_active
+            && let Some(id) = self.stream_id
+        {
+            let _ = self.stop_stream(id);
         }
     }
 

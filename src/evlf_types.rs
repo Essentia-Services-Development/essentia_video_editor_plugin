@@ -3,6 +3,8 @@
 //! This module defines the binary format for multi-layer video containers
 //! with drill-down metadata and next-frame branching capabilities.
 
+#![allow(unused_imports)]
+
 use core::mem::size_of;
 
 /// EVLF magic number: "EVLF" in big-endian.
