@@ -2,7 +2,9 @@
 
 use crate::{
     errors::{VideoEditorError, VideoEditorResult},
-    types::{AudioClip, VideoClip},
+    types::{
+        AudioClip, AudioFormat, FrameRate, Resolution, TimelinePosition, VideoClip, VideoFormat,
+    },
 };
 
 /// Asset library for managing media files.
@@ -28,16 +30,13 @@ impl AssetLibrary {
         self.next_clip_id += 1;
 
         // Placeholder - would analyze video file
-        self.video_clips.push(VideoClip {
-            id,
-            source_path: path.to_string(),
-            duration_ms: 10000, // Placeholder
-            in_point_ms: 0,
-            out_point_ms: 10000,
-            format: crate::types::VideoFormat::H264,
-            resolution: crate::types::Resolution::FHD,
-            frame_rate: crate::types::FrameRate::FPS_30,
-        });
+        let clip = VideoClip::new(id, path)
+            .with_resolution(Resolution::FHD)
+            .with_frame_rate(FrameRate::FPS_30)
+            .with_duration(TimelinePosition::from_ms(10000))
+            .with_format(VideoFormat::H264);
+
+        self.video_clips.push(clip);
 
         Ok(id)
     }
@@ -52,14 +51,13 @@ impl AssetLibrary {
         self.next_clip_id += 1;
 
         // Placeholder - would analyze audio file
-        self.audio_clips.push(AudioClip {
-            id,
-            source_path: path.to_string(),
-            duration_ms: 10000,
-            format: crate::types::AudioFormat::AAC,
-            sample_rate: 48000,
-            channels: 2,
-        });
+        let clip = AudioClip::new(id, path)
+            .with_sample_rate(48000)
+            .with_channels(2)
+            .with_duration(TimelinePosition::from_ms(10000))
+            .with_format(AudioFormat::AAC);
+
+        self.audio_clips.push(clip);
 
         Ok(id)
     }

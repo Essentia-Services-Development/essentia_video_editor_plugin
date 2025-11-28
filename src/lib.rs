@@ -72,8 +72,8 @@ pub use metadata::{
 pub use plugin::VideoEditorPlugin;
 pub use timeline::TimelineManager;
 pub use types::{
-    AudioClip, AudioFormat, FrameRate, Resolution, TimelinePosition, TimelineTrack, VideoClip,
-    VideoFormat,
+    AudioClip, AudioFormat, FrameRate, Resolution, TimePosition, TimelinePosition, TimelineTrack,
+    TrackType, VideoClip, VideoFormat,
 };
 
 #[cfg(test)]
