@@ -446,7 +446,7 @@ mod tests {
     #[test]
     fn test_header_size() {
         // Verify header fits in expected size
-        assert!(size_of::<u32>() * 8 + size_of::<u64>() * 4 <= EVLF_HEADER_SIZE);
+        assert!(u32::BITS as usize + size_of::<u64>() * 4 <= EVLF_HEADER_SIZE);
     }
 
     #[test]
