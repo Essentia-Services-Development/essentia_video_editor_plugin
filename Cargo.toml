@@ -1,21 +1,22 @@
 [package]
 name = "essentia_video_editor_plugin"
-version = "0.1.0"
-edition = "2024"
-authors = ["Essentia Services Development <dev@essentia.services>"]
 description = "AI-enhanced video editing with GPU acceleration"
-license = "MIT"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+publish.workspace = true
 repository = "https://github.com/Essentia-Services-Development/essentia_video_editor_plugin"
-readme = "README.md"
 keywords = ["essentia", "video", "editing", "gpu", "plugin"]
 categories = ["multimedia", "graphics"]
 
 [dependencies]
-essentia_core = { path = "../../core/essentia_core" }
-essentia_traits = { path = "../../core/essentia_traits" }
-essentia_plugin_system = { path = "../../core/essentia_plugin_system" }
-essentia_ffui = { path = "../../ui/essentia_ffui" }
-essentia_gpu_accel_kernel = { path = "../../core/essentia_gpu_accel_kernel" }
+# Core dependencies (workspace inheritance)
+essentia_core = { workspace = true }
+essentia_traits = { workspace = true }
+essentia_plugin_system = { workspace = true }
+essentia_ffui = { workspace = true }
+essentia_gpu_accel_kernel = { workspace = true }
 
 [dev-dependencies]
 
