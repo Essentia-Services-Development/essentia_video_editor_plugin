@@ -83,7 +83,7 @@ impl ObjectDetection {
 
     /// Adds an attribute.
     pub fn with_attribute(mut self, key: impl Into<String>, value: impl Into<String>) -> Self {
-        self.attributes.push((key.into(), value.into()));
+        self.attributes.push((key.into(), value;
         self
     }
 
@@ -226,7 +226,7 @@ impl SceneClassification {
 
     /// Adds a scene attribute.
     pub fn with_attribute(mut self, attribute: impl Into<String>) -> Self {
-        self.attributes.push(attribute.into());
+        self.attributes.push(attribute;
         self
     }
 }
@@ -331,7 +331,7 @@ impl MetadataIndex {
 
     /// Adds scene transition.
     pub fn add_scene_transition(&mut self, frame: u64, scene: impl Into<String>) {
-        self.scene_transitions.push((frame, scene.into()));
+        self.scene_transitions.push((frame, scene;
     }
 
     /// Finds frames containing object.
@@ -380,7 +380,10 @@ mod tests {
         index.track_object(1, 1);
         index.track_object(2, 1);
 
-        let frames = index.frames_with_object(1).unwrap();
+        let frames = index.frames_with_object(1).ok_or_else(|| EssentiaError::invalid_state("unwrap replaced"))?;
         assert_eq!(frames.len(), 2);
     }
 }
+
+
+

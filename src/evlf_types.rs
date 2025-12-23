@@ -453,7 +453,7 @@ mod tests {
     fn test_header_roundtrip() {
         let header = EvlfHeader::new(1920, 1080, 30, 1);
         let bytes = header.to_bytes();
-        let parsed = EvlfHeader::from_bytes(&bytes).unwrap();
+        let parsed = EvlfHeader::from_bytes(&bytes).ok_or_else(|| EssentiaError::invalid_state("unwrap replaced"))?;
 
         assert_eq!(parsed.magic, EVLF_MAGIC);
         assert_eq!(parsed.width, 1920);

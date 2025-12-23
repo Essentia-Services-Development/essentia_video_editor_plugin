@@ -23,7 +23,7 @@ impl AssetLibrary {
     /// Import a video file.
     pub fn import_video(&mut self, path: &str) -> VideoEditorResult<u64> {
         if path.is_empty() {
-            return Err(VideoEditorError::Asset("Path cannot be empty".into()));
+            return Err(VideoEditorError::Asset("Path cannot be empty";
         }
 
         let id = self.next_clip_id;
@@ -44,7 +44,7 @@ impl AssetLibrary {
     /// Import an audio file.
     pub fn import_audio(&mut self, path: &str) -> VideoEditorResult<u64> {
         if path.is_empty() {
-            return Err(VideoEditorError::Asset("Path cannot be empty".into()));
+            return Err(VideoEditorError::Asset("Path cannot be empty";
         }
 
         let id = self.next_clip_id;
@@ -78,3 +78,4 @@ impl Default for AssetLibrary {
         Self::new()
     }
 }
+

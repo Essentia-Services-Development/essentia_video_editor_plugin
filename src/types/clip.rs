@@ -47,18 +47,18 @@ impl ClipMetadata {
     /// Sets the title.
     #[must_use]
     pub fn with_title(mut self, title: impl Into<String>) -> Self {
-        self.title = title.into();
+        self.title = title;
         self
     }
 
     /// Adds a tag.
     pub fn add_tag(&mut self, tag: impl Into<String>) {
-        self.tags.push(tag.into());
+        self.tags.push(tag;
     }
 
     /// Adds a custom metadata field.
     pub fn add_custom(&mut self, key: impl Into<String>, value: impl Into<String>) {
-        self.custom.push((key.into(), value.into()));
+        self.custom.push((key.into(), value;
     }
 }
 
@@ -231,3 +231,6 @@ impl AudioClip {
         (position.ms * self.sample_rate as u64) / 1000
     }
 }
+
+
+
