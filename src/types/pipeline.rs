@@ -202,7 +202,7 @@ impl PipelineConfig {
 
     /// Sets a shader define.
     pub fn set_define(&mut self, key: impl Into<String>, value: impl Into<String>) {
-        self.shader_defines.insert(key.into(), value;
+        self.shader_defines.insert(key.into(), value.into());
     }
 }
 
@@ -324,14 +324,14 @@ impl RenderPass {
     /// Adds an input attachment.
     #[must_use]
     pub fn with_input(mut self, input: impl Into<String>) -> Self {
-        self.inputs.push(input;
+        self.inputs.push(input.into());
         self
     }
 
     /// Adds an output attachment.
     #[must_use]
     pub fn with_output(mut self, output: impl Into<String>) -> Self {
-        self.outputs.push(output;
+        self.outputs.push(output.into());
         self
     }
 }
@@ -498,5 +498,3 @@ pub enum OptimizationLevel {
     /// Size optimization.
     Size,
 }
-
-

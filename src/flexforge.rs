@@ -617,14 +617,15 @@ mod tests {
     }
 
     #[test]
+    #[allow(clippy::expect_used)]
     fn test_streaming_lifecycle() {
         let mut integration = VideoEditorFlexForge::new();
 
-        let stream_id = integration.start_stream().ok_or_else(|| EssentiaError::invalid_state("Should start");
+        let stream_id = integration.start_stream().expect("should start streaming");
         assert!(integration.is_streaming());
         assert_eq!(integration.target_fps(), 60); // Default frame rate
 
-        integration.stop_stream(stream_id).ok_or_else(|| EssentiaError::invalid_state("Should stop");
+        integration.stop_stream(stream_id).expect("should stop streaming");
         assert!(!integration.is_streaming());
     }
 
@@ -639,5 +640,3 @@ mod tests {
         assert!(integration.on_config_changed("preview_quality", "150").is_err());
     }
 }
-
-

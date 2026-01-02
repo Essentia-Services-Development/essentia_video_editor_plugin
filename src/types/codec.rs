@@ -298,7 +298,7 @@ impl EncoderConfig {
 
     /// Sets an extra codec option.
     pub fn set_option(&mut self, key: impl Into<String>, value: impl Into<String>) {
-        self.extra_options.insert(key.into(), value;
+        self.extra_options.insert(key.into(), value.into());
     }
 }
 
@@ -466,5 +466,3 @@ impl Default for CodecParams {
         Self::new(CodecId::Unknown)
     }
 }
-
-
