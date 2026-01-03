@@ -80,39 +80,42 @@
 //! └─────────────────────────────────────────────────────────────┘
 //! ```
 
-mod assets;
-mod config;
-pub mod converter;
-mod effects;
-mod errors;
-pub mod evlf_types;
-pub mod flexforge;
-mod gpu_pipeline;
-pub mod metadata;
-mod plugin;
-mod timeline;
+// EMD-compliant modules
+pub mod errors;
+mod r#impl;
 mod types;
 
-pub use assets::AssetLibrary;
-pub use config::VideoEditorConfig;
+// Domain modules (public APIs)
+pub mod converter;
+pub mod evlf_types;
+pub mod flexforge;
+pub mod metadata;
+
+// Re-exports from errors
+// Re-exports from converter
 pub use converter::{
     ConversionOptions, ConversionPhase, ConversionProgress, ConversionResult, ConversionStats,
     FormatConverter, InputFormat, InputFormatCategory, OutputFormat, ProgressCallback,
 };
-pub use effects::EffectsPipeline;
 pub use errors::{VideoEditorError, VideoEditorResult};
+// Re-exports from evlf_types
 pub use evlf_types::{
     BlendMode, BranchFork, BranchPoint, BranchType, EVLF_MAGIC, EVLF_VERSION, EvlfFlags,
     EvlfHeader, EvlfTrackHeader, EvlfTrackType, FrameIndexEntry, FrameType, TrackFlags,
 };
+// Re-exports from flexforge
 pub use flexforge::VideoEditorFlexForge;
-pub use gpu_pipeline::GpuPipeline;
+// Re-exports from impl
+pub use r#impl::{
+    AssetLibrary, EffectType, EffectsPipeline, GpuPipeline, TimelineManager, VideoEditorConfig,
+    VideoEditorPlugin, VideoEffect,
+};
+// Re-exports from metadata
 pub use metadata::{
     Annotation, AnnotationType, BoundingBox, FrameMetadata, MetadataIndex, ObjectDetection,
     SceneClassification, SemanticRegion, TrackingState,
 };
-pub use plugin::VideoEditorPlugin;
-pub use timeline::TimelineManager;
+// Re-exports from types
 pub use types::{
     AudioClip, AudioFormat, FrameRate, Resolution, TimePosition, TimelinePosition, TimelineTrack,
     TrackType, VideoClip, VideoFormat,
