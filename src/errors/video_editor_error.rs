@@ -1,7 +1,8 @@
 //! Video editor error definitions.
 //!
 //! Provides `VideoEditorError` for video editing operations including
-//! timeline, asset, effect, GPU, export, format conversion, and decoding errors.
+//! timeline, asset, effect, GPU, export, format conversion, and decoding
+//! errors.
 
 use core::fmt;
 
