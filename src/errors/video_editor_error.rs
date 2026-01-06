@@ -21,11 +21,11 @@ pub enum VideoEditorError {
     Export(String),
     /// IO error.
     Io(String),
-    /// Unsupported format error (CR-015).
+    /// Unsupported format error.
     UnsupportedFormat(String),
-    /// Conversion error (CR-015).
+    /// Conversion error.
     Conversion(String),
-    /// Decoder error (CR-015).
+    /// Decoder error.
     Decoder(String),
 }
 

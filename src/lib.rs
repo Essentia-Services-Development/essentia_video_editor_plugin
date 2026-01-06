@@ -9,8 +9,7 @@
 //! - AI-assisted content generation
 //! - Timeline management
 //! - Asset library integration
-//! - **Format conversion** (CR-015): Convert standard video/image/3D formats to
-//!   FFUI
+//! - **Format conversion**: Convert standard video/image/3D formats to FFUI
 
 // Video editor plugin pedantic lint allowances (VIDEO-LINT-STAGING-01)
 // Video editing involves precision casts, builder patterns, complex types
@@ -73,7 +72,7 @@
 //! │         │                                                    │
 //! │         ▼                                                    │
 //! │  ┌─────────────────────────────────────────────────────┐    │
-//! │  │           Format Converter (CR-015)                  │    │
+//! │  │           Format Converter                  │    │
 //! │  │   MP4/MOV/MKV → EVLF  |  PNG/PSD → EFUI Layer        │    │
 //! │  │   glTF/FBX → 3D Layer |  SVG → Vector Layer          │    │
 //! │  └─────────────────────────────────────────────────────┘    │

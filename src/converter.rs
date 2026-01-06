@@ -1,4 +1,4 @@
-//! # Format Converter Module (CR-015)
+//! # Format Converter Module
 //!
 //! Converts standard video, 2D, 3D, and image formats to the FFUI/EVLF format.
 //! This enables the video editor to open external files and convert them for
