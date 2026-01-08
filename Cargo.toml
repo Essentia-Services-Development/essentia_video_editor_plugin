@@ -1,14 +1,15 @@
 [package]
 name = "essentia_video_editor_plugin"
+    repository    = {workspace = true}
+    readme        = {workspace = true}
+    keywords      = {workspace = true}
+    categories    = {workspace = true}
 description = "AI-enhanced video editing with GPU acceleration"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true
 license.workspace = true
 publish.workspace = true
-repository = "https://github.com/Essentia-Services-Development/essentia_video_editor_plugin"
-keywords = ["essentia", "video", "editing", "gpu", "plugin"]
-categories = ["multimedia", "graphics"]
 
 [dependencies]
 # Core dependencies (workspace inheritance)
@@ -17,13 +18,9 @@ essentia_traits = { workspace = true }
 essentia_plugin_system = { workspace = true }
 essentia_ffui = { workspace = true }
 essentia_gpu_accel_kernel = { workspace = true }
-
 [dev-dependencies]
-
 [features]
 default = []
 gpu = []
-
 [lib]
-name = "essentia_video_editor_plugin"
 path = "src/lib.rs"
