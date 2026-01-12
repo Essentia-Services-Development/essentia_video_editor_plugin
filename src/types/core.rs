@@ -518,3 +518,99 @@ impl Default for AspectRatio {
         Self::WIDESCREEN_16_9
     }
 }
+
+/// Real-world timestamp for project metadata and events.
+///
+/// Represents system time as Unix seconds for project operations
+/// like autosave, modification tracking, and markers.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub struct Timestamp {
+    /// Unix timestamp in seconds since epoch.
+    secs: u64,
+}
+
+impl Timestamp {
+    /// Creates a new timestamp from Unix seconds.
+    #[must_use]
+    pub const fn new(secs: u64) -> Self {
+        Self { secs }
+    }
+
+    /// Creates a timestamp representing the current system time.
+    #[must_use]
+    pub fn now() -> Self {
+        use std::time::{SystemTime, UNIX_EPOCH};
+        let secs = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .map(|d| d.as_secs())
+            .unwrap_or(0);
+        Self { secs }
+    }
+
+    /// Creates a timestamp at Unix epoch (January 1, 1970).
+    #[must_use]
+    pub const fn epoch() -> Self {
+        Self { secs: 0 }
+    }
+
+    /// Returns the Unix timestamp in seconds.
+    #[must_use]
+    pub const fn as_secs(&self) -> u64 {
+        self.secs
+    }
+
+    /// Returns duration elapsed since this timestamp.
+    ///
+    /// Returns zero duration if the timestamp is in the future.
+    #[must_use]
+    pub fn elapsed(&self) -> std::time::Duration {
+        let now = Self::now();
+        if now.secs >= self.secs {
+            std::time::Duration::from_secs(now.secs - self.secs)
+        } else {
+            std::time::Duration::ZERO
+        }
+    }
+
+    /// Returns duration since another timestamp.
+    ///
+    /// Returns zero duration if `other` is after this timestamp.
+    #[must_use]
+    pub fn elapsed_since(&self, other: Self) -> std::time::Duration {
+        if self.secs >= other.secs {
+            std::time::Duration::from_secs(self.secs - other.secs)
+        } else {
+            std::time::Duration::ZERO
+        }
+    }
+
+    /// Adds a duration to this timestamp.
+    #[must_use]
+    pub fn add_duration(&self, duration: std::time::Duration) -> Self {
+        Self { secs: self.secs.saturating_add(duration.as_secs()) }
+    }
+
+    /// Subtracts a duration from this timestamp.
+    #[must_use]
+    pub fn sub_duration(&self, duration: std::time::Duration) -> Self {
+        Self { secs: self.secs.saturating_sub(duration.as_secs()) }
+    }
+
+    /// Returns whether this timestamp is before another.
+    #[must_use]
+    pub const fn is_before(&self, other: &Self) -> bool {
+        self.secs < other.secs
+    }
+
+    /// Returns whether this timestamp is after another.
+    #[must_use]
+    pub const fn is_after(&self, other: &Self) -> bool {
+        self.secs > other.secs
+    }
+}
+
+impl Default for Timestamp {
+    fn default() -> Self {
+        Self::now()
+    }
+}

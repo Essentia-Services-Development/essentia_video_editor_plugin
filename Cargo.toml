@@ -20,6 +20,7 @@ essentia_ffui = { workspace = true }
 essentia_gpu_accel_kernel = { workspace = true }
 [dev-dependencies]
 [features]
+full-tests = []
 default = []
 gpu = []
 [lib]

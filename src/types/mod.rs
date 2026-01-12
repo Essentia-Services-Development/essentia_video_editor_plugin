@@ -40,7 +40,7 @@ pub mod pipeline;
 pub mod timeline;
 
 // Re-exports - Core types (primary API)
-pub use core::{AudioFormat, FrameRate, Resolution, TimePosition, VideoFormat};
+pub use core::{AudioFormat, FrameRate, Resolution, TimePosition, Timestamp, VideoFormat};
 
 // Re-exports - Clip types (media clips)
 pub use clip::{AudioClip, VideoClip};
