@@ -18,6 +18,7 @@ essentia_traits = { workspace = true }
 essentia_plugin_system = { workspace = true }
 essentia_ffui = { workspace = true }
 essentia_gpu_accel_kernel = { workspace = true }
+essentia_time = { workspace = true }
 [dev-dependencies]
 [features]
 full-tests = []
@@ -25,4 +26,3 @@ default = []
 gpu = []
 [lib]
 path = "src/lib.rs"
-

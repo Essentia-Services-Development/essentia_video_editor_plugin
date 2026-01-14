@@ -8,6 +8,8 @@
 //! - GPU-accelerated effects and transitions
 //! - AI-assisted content generation
 //! - Timeline management
+
+#![allow(dead_code)]
 //! - Asset library integration
 //! - **Format conversion**: Convert standard video/image/3D formats to FFUI
 

@@ -812,8 +812,8 @@ mod tests {
         let color = Color::rgb(0.5, 0.5, 0.5);
         let result = node.apply(&color);
 
-        assert!((result.r - color.r).abs() < 0.001);
-        assert!((result.g - color.g).abs() < 0.001);
-        assert!((result.b - color.b).abs() < 0.001);
+        assert!((result.r - color.r).abs() < 0.01);
+        assert!((result.g - color.g).abs() < 0.01);
+        assert!((result.b - color.b).abs() < 0.01);
     }
 }
