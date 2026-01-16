@@ -643,9 +643,16 @@ impl AudioMixer {
     }
 
     /// Adds a new track strip.
+    ///
+    /// # Panics
+    ///
+    /// This function should never panic as the track is added immediately before access.
+    /// The unwrap is safe due to the immediate push operation.
+    #[allow(clippy::unwrap_used)]
     pub fn add_track(&mut self, track_id: u64, name: impl Into<String>) -> &mut AudioTrackStrip {
         self.tracks.push(AudioTrackStrip::new(track_id, name, self.master.id()));
-        self.tracks.last_mut().expect("just pushed")
+        // SAFETY: Element was just pushed, so last_mut will always succeed
+        self.tracks.last_mut().unwrap()
     }
 
     /// Removes a track strip.

@@ -739,9 +739,16 @@ impl AnimationManager {
     }
 
     /// Creates a new animation layer.
+    ///
+    /// # Panics
+    ///
+    /// This function should never panic as the layer is added immediately before access.
+    /// The unwrap is safe due to the immediate push operation.
+    #[allow(clippy::unwrap_used)]
     pub fn create_layer(&mut self, name: impl Into<String>, target_id: u64) -> &mut AnimationLayer {
         self.layers.push(AnimationLayer::new(name, target_id));
-        self.layers.last_mut().expect("just pushed")
+        // SAFETY: Element was just pushed, so last_mut will always succeed
+        self.layers.last_mut().unwrap()
     }
 
     /// Gets an animation layer by target ID.
