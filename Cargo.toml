@@ -19,6 +19,7 @@ essentia_plugin_system = { workspace = true }
 essentia_ffui = { workspace = true }
 essentia_gpu_accel_kernel = { workspace = true }
 essentia_time = { workspace = true }
+essentia_color_types = { workspace = true }
 [dev-dependencies]
 [features]
 full-tests = []

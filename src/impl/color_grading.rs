@@ -4,6 +4,8 @@
 //! Features: LUT support, color wheels, curves, scopes,
 //! HSL adjustment, color matching, and node-based grading.
 
+use essentia_color_types::{Color, Hsl};
+
 /// Color space for grading operations.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Default)]
 pub enum ColorSpace {
@@ -53,142 +55,9 @@ impl ColorSpace {
     }
 }
 
-/// RGB color value (0.0 to 1.0 range, may exceed for HDR).
-#[derive(Debug, Clone, Copy, PartialEq, Default)]
-pub struct Color {
-    /// Red channel.
-    pub r: f32,
-    /// Green channel.
-    pub g: f32,
-    /// Blue channel.
-    pub b: f32,
-    /// Alpha channel.
-    pub a: f32,
-}
 
-impl Color {
-    /// Creates a new color.
-    #[must_use]
-    pub const fn new(r: f32, g: f32, b: f32, a: f32) -> Self {
-        Self { r, g, b, a }
-    }
 
-    /// Creates an opaque color.
-    #[must_use]
-    pub const fn rgb(r: f32, g: f32, b: f32) -> Self {
-        Self { r, g, b, a: 1.0 }
-    }
 
-    /// Black color.
-    pub const BLACK: Self = Self::rgb(0.0, 0.0, 0.0);
-    /// White color.
-    pub const WHITE: Self = Self::rgb(1.0, 1.0, 1.0);
-    /// Middle gray (18%).
-    pub const GRAY_18: Self = Self::rgb(0.18, 0.18, 0.18);
-
-    /// Returns luminance (Rec. 709 coefficients).
-    #[must_use]
-    pub fn luminance(&self) -> f32 {
-        0.2126 * self.r + 0.7152 * self.g + 0.0722 * self.b
-    }
-
-    /// Converts to HSL.
-    #[must_use]
-    pub fn to_hsl(self) -> (f32, f32, f32) {
-        let max = self.r.max(self.g).max(self.b);
-        let min = self.r.min(self.g).min(self.b);
-        let l = (max + min) / 2.0;
-
-        if (max - min).abs() < f32::EPSILON {
-            return (0.0, 0.0, l);
-        }
-
-        let d = max - min;
-        let s = if l > 0.5 {
-            d / (2.0 - max - min)
-        } else {
-            d / (max + min)
-        };
-
-        let h = if (max - self.r).abs() < f32::EPSILON {
-            (self.g - self.b) / d + (if self.g < self.b { 6.0 } else { 0.0 })
-        } else if (max - self.g).abs() < f32::EPSILON {
-            (self.b - self.r) / d + 2.0
-        } else {
-            (self.r - self.g) / d + 4.0
-        };
-
-        (h / 6.0, s, l)
-    }
-
-    /// Creates color from HSL.
-    #[must_use]
-    pub fn from_hsl(h: f32, s: f32, l: f32) -> Self {
-        if s.abs() < f32::EPSILON {
-            return Self::rgb(l, l, l);
-        }
-
-        let q = if l < 0.5 {
-            l * (1.0 + s)
-        } else {
-            l + s - l * s
-        };
-        let p = 2.0 * l - q;
-
-        let hue_to_rgb = |t: f32| -> f32 {
-            let t = if t < 0.0 {
-                t + 1.0
-            } else if t > 1.0 {
-                t - 1.0
-            } else {
-                t
-            };
-            if t < 1.0 / 6.0 {
-                p + (q - p) * 6.0 * t
-            } else if t < 0.5 {
-                q
-            } else if t < 2.0 / 3.0 {
-                p + (q - p) * (2.0 / 3.0 - t) * 6.0
-            } else {
-                p
-            }
-        };
-
-        Self::rgb(
-            hue_to_rgb(h + 1.0 / 3.0),
-            hue_to_rgb(h),
-            hue_to_rgb(h - 1.0 / 3.0),
-        )
-    }
-
-    /// Applies gamma correction.
-    #[must_use]
-    pub fn apply_gamma(&self, gamma: f32) -> Self {
-        Self::new(
-            self.r.powf(gamma),
-            self.g.powf(gamma),
-            self.b.powf(gamma),
-            self.a,
-        )
-    }
-
-    /// Applies lift, gamma, gain (3-way color corrector).
-    #[must_use]
-    pub fn apply_lgg(&self, lift: &Color, gamma: &Color, gain: &Color) -> Self {
-        // Formula: (x * gain + lift) ^ (1/gamma)
-        let apply_channel = |x: f32, l: f32, g: f32, gn: f32| -> f32 {
-            let v = x * gn + l;
-            if g > 0.0 { v.powf(1.0 / g) } else { v }
-        };
-
-        Self::new(
-            apply_channel(self.r, lift.r, gamma.r, gain.r),
-            apply_channel(self.g, lift.g, gamma.g, gain.g),
-            apply_channel(self.b, lift.b, gamma.b, gain.b),
-            self.a,
-        )
-    }
-}
 
 /// Color wheel adjustment (shadows/midtones/highlights).
 #[derive(Debug, Clone, Copy, Default)]
@@ -218,7 +87,8 @@ impl ColorWheel {
     /// Applies the color wheel to a color.
     #[must_use]
     pub fn apply(&self, color: &Color) -> Color {
-        let (h, s, l) = color.to_hsl();
+        let hsl = color.to_hsl();
+        let (h, s, l) = (hsl.h, hsl.s, hsl.l);
 
         // Apply hue rotation
         let new_h = (h + self.hue).rem_euclid(1.0);
@@ -229,7 +99,7 @@ impl ColorWheel {
         // Apply brightness
         let new_l = (l + self.brightness).clamp(0.0, 1.0);
 
-        let mut result = Color::from_hsl(new_h, new_s, new_l);
+        let mut result = Hsl::new(new_h, new_s, new_l).to_rgb();
 
         // Apply offset
         result.r += self.offset.r;
@@ -779,8 +649,9 @@ mod tests {
     #[test]
     fn test_color_hsl_roundtrip() {
         let original = Color::rgb(0.8, 0.3, 0.5);
-        let (h, s, l) = original.to_hsl();
-        let converted = Color::from_hsl(h, s, l);
+        let hsl = original.to_hsl();
+        let (h, s, l) = (hsl.h, hsl.s, hsl.l);
+        let converted = Hsl::new(h, s, l).to_rgb();
 
         assert!((original.r - converted.r).abs() < 0.01);
         assert!((original.g - converted.g).abs() < 0.01);
