@@ -71,3 +71,4 @@ impl Default for EffectsPipeline {
         Self::new()
     }
 }
+

@@ -46,3 +46,4 @@ pub use core::{AudioFormat, FrameRate, Resolution, TimePosition, Timestamp, Vide
 pub use clip::{AudioClip, VideoClip};
 // Re-exports - Timeline types (NLE operations)
 pub use timeline::{TimelinePosition, TimelineTrack, TrackType};
+

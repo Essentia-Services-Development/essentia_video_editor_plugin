@@ -644,15 +644,17 @@ impl AudioMixer {
 
     /// Adds a new track strip.
     ///
-    /// # Panics
+    /// # Errors
     ///
-    /// This function should never panic as the track is added immediately before access.
-    /// The unwrap is safe due to the immediate push operation.
-    #[allow(clippy::unwrap_used)]
-    pub fn add_track(&mut self, track_id: u64, name: impl Into<String>) -> &mut AudioTrackStrip {
+    /// Returns `VideoEditorError::Timeline` if the track cannot be created.
+    pub fn add_track(
+        &mut self, track_id: u64, name: impl Into<String>,
+    ) -> crate::errors::VideoEditorResult<&mut AudioTrackStrip> {
         self.tracks.push(AudioTrackStrip::new(track_id, name, self.master.id()));
         // SAFETY: Element was just pushed, so last_mut will always succeed
-        self.tracks.last_mut().unwrap()
+        self.tracks.last_mut().ok_or_else(|| {
+            crate::VideoEditorError::Timeline("Track was just added but not found".to_string())
+        })
     }
 
     /// Removes a track strip.
@@ -802,7 +804,7 @@ mod tests {
     #[test]
     fn test_track_strip() {
         let mut mixer = AudioMixer::new(48000, 1024);
-        let track = mixer.add_track(1, "Audio 1");
+        let track = mixer.add_track(1, "Audio 1").unwrap();
 
         assert_eq!(track.track_id(), 1);
         assert_eq!(track.name(), "Audio 1");

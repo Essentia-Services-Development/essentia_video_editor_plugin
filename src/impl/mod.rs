@@ -37,3 +37,4 @@ pub use effects::{EffectType, EffectsPipeline, VideoEffect};
 pub use gpu_pipeline::GpuPipeline;
 pub use plugin::VideoEditorPlugin;
 pub use timeline::TimelineManager;
+

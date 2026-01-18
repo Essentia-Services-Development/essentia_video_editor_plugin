@@ -640,3 +640,5 @@ mod tests {
         assert!(integration.on_config_changed("preview_quality", "150").is_err());
     }
 }
+
+

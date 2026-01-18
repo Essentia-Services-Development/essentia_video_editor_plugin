@@ -810,3 +810,5 @@ mod tests {
         assert_eq!(half.calculate_resolution(source).width, 960);
     }
 }
+
+

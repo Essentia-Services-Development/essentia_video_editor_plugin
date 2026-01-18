@@ -499,3 +499,4 @@ impl ColorCorrection {
             && (self.tint - 0.0).abs() < f32::EPSILON
     }
 }
+

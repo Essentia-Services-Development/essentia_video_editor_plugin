@@ -4,8 +4,10 @@
 //! Features: Project save/load, autosave, version control,
 //! recovery, project templates, and recent files.
 
-use crate::errors::{VideoEditorError, VideoEditorResult};
-use crate::types::Timestamp;
+use crate::{
+    errors::{VideoEditorError, VideoEditorResult},
+    types::Timestamp,
+};
 
 /// Unique identifier for a project.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
@@ -84,25 +86,25 @@ impl Default for ProjectVersion {
 #[derive(Debug, Clone, Default)]
 pub struct ProjectMetadata {
     /// Project name.
-    pub name:         String,
+    pub name:        String,
     /// Project description.
-    pub description:  String,
+    pub description: String,
     /// Author name.
-    pub author:       String,
+    pub author:      String,
     /// Copyright notice.
-    pub copyright:    String,
+    pub copyright:   String,
     /// Project tags.
-    pub tags:         Vec<String>,
+    pub tags:        Vec<String>,
     /// Custom metadata fields.
-    pub custom:       Vec<(String, String)>,
+    pub custom:      Vec<(String, String)>,
     /// Creation timestamp.
-    pub created_at:   Timestamp,
+    pub created_at:  Timestamp,
     /// Last modified timestamp.
-    pub modified_at:  Timestamp,
+    pub modified_at: Timestamp,
     /// Project version.
-    pub version:      ProjectVersion,
+    pub version:     ProjectVersion,
     /// Software version that created this project.
-    pub app_version:  String,
+    pub app_version: String,
 }
 
 impl ProjectMetadata {
@@ -134,29 +136,29 @@ impl ProjectMetadata {
 #[derive(Debug, Clone)]
 pub struct ProjectSettings {
     /// Timeline resolution (width).
-    pub timeline_width:   u32,
+    pub timeline_width:    u32,
     /// Timeline resolution (height).
-    pub timeline_height:  u32,
+    pub timeline_height:   u32,
     /// Frame rate numerator.
-    pub frame_rate_num:   u32,
+    pub frame_rate_num:    u32,
     /// Frame rate denominator.
-    pub frame_rate_den:   u32,
+    pub frame_rate_den:    u32,
     /// Sample rate for audio.
-    pub sample_rate:      u32,
+    pub sample_rate:       u32,
     /// Color space.
-    pub color_space:      String,
+    pub color_space:       String,
     /// Pixel aspect ratio.
-    pub pixel_aspect:     f64,
+    pub pixel_aspect:      f64,
     /// Working color depth (8, 10, 16, 32).
-    pub color_depth:      u8,
+    pub color_depth:       u8,
     /// Preview quality (0.0 to 1.0).
-    pub preview_quality:  f32,
+    pub preview_quality:   f32,
     /// Proxy generation enabled.
-    pub use_proxies:      bool,
+    pub use_proxies:       bool,
     /// Auto-save interval in seconds (0 = disabled).
     pub autosave_interval: u32,
     /// Maximum undo history.
-    pub max_undo_history: u32,
+    pub max_undo_history:  u32,
 }
 
 impl Default for ProjectSettings {
@@ -193,9 +195,9 @@ impl ProjectSettings {
     #[must_use]
     pub fn uhd_4k() -> Self {
         Self {
-            timeline_width:  3840,
+            timeline_width: 3840,
             timeline_height: 2160,
-            color_depth:     10,
+            color_depth: 10,
             ..Default::default()
         }
     }
@@ -203,21 +205,13 @@ impl ProjectSettings {
     /// Creates film settings (24fps).
     #[must_use]
     pub fn film() -> Self {
-        Self {
-            frame_rate_num: 24,
-            frame_rate_den: 1,
-            ..Default::default()
-        }
+        Self { frame_rate_num: 24, frame_rate_den: 1, ..Default::default() }
     }
 
     /// Creates NTSC settings (29.97fps).
     #[must_use]
     pub fn ntsc() -> Self {
-        Self {
-            frame_rate_num: 30000,
-            frame_rate_den: 1001,
-            ..Default::default()
-        }
+        Self { frame_rate_num: 30000, frame_rate_den: 1001, ..Default::default() }
     }
 }
 
@@ -225,9 +219,9 @@ impl ProjectSettings {
 #[derive(Debug, Clone)]
 pub struct AutosaveInfo {
     /// Path to autosave file.
-    pub path:       String,
+    pub path:        String,
     /// Timestamp of autosave.
-    pub timestamp:  Timestamp,
+    pub timestamp:   Timestamp,
     /// Whether this is a recovery file.
     pub is_recovery: bool,
 }
@@ -236,25 +230,25 @@ pub struct AutosaveInfo {
 #[derive(Debug)]
 pub struct Project {
     /// Project identifier.
-    id:            ProjectId,
+    id:              ProjectId,
     /// File path (None if never saved).
-    path:          Option<String>,
+    path:            Option<String>,
     /// Project metadata.
-    metadata:      ProjectMetadata,
+    metadata:        ProjectMetadata,
     /// Project settings.
-    settings:      ProjectSettings,
+    settings:        ProjectSettings,
     /// Current state.
-    state:         ProjectState,
+    state:           ProjectState,
     /// Undo stack (serialized states).
-    undo_stack:    Vec<Vec<u8>>,
+    undo_stack:      Vec<Vec<u8>>,
     /// Redo stack (serialized states).
-    redo_stack:    Vec<Vec<u8>>,
+    redo_stack:      Vec<Vec<u8>>,
     /// Current undo index.
-    undo_index:    usize,
+    undo_index:      usize,
     /// Last autosave info.
-    last_autosave: Option<AutosaveInfo>,
+    last_autosave:   Option<AutosaveInfo>,
     /// Asset paths referenced by project.
-    asset_paths:   Vec<String>,
+    asset_paths:     Vec<String>,
     /// Linked projects (for team workflows).
     linked_projects: Vec<String>,
 }
@@ -528,7 +522,7 @@ impl ProjectTemplate {
             description: "1080x1080 square format for social media".into(),
             category:    "Social".into(),
             settings:    ProjectSettings {
-                timeline_width:  1080,
+                timeline_width: 1080,
                 timeline_height: 1080,
                 ..Default::default()
             },
@@ -545,7 +539,7 @@ impl ProjectTemplate {
             description: "1080x1920 vertical format for stories/reels".into(),
             category:    "Social".into(),
             settings:    ProjectSettings {
-                timeline_width:  1080,
+                timeline_width: 1080,
                 timeline_height: 1920,
                 ..Default::default()
             },
@@ -558,17 +552,17 @@ impl ProjectTemplate {
 /// Manager for project operations.
 pub struct ProjectManager {
     /// Current project.
-    current_project: Option<Project>,
+    current_project:     Option<Project>,
     /// Recent files.
-    recent_files:    Vec<RecentFile>,
+    recent_files:        Vec<RecentFile>,
     /// Available templates.
-    templates:       Vec<ProjectTemplate>,
+    templates:           Vec<ProjectTemplate>,
     /// Next project ID.
-    next_id:         u64,
+    next_id:             u64,
     /// Maximum recent files.
-    max_recent:      usize,
+    max_recent:          usize,
     /// Autosave enabled.
-    autosave_enabled: bool,
+    autosave_enabled:    bool,
     /// Last autosave check time.
     last_autosave_check: Option<Timestamp>,
 }
@@ -608,7 +602,9 @@ impl ProjectManager {
 
     /// Creates a new project.
     pub fn new_project(&mut self, name: impl Into<String>) -> VideoEditorResult<&mut Project> {
-        if let Some(project) = &self.current_project && project.has_unsaved_changes() {
+        if let Some(project) = &self.current_project
+            && project.has_unsaved_changes()
+        {
             return Err(VideoEditorError::Io(
                 "Current project has unsaved changes".into(),
             ));
@@ -617,22 +613,25 @@ impl ProjectManager {
         let id = self.next_id();
         self.current_project = Some(Project::new(id, name));
 
-        self.current_project.as_mut().ok_or_else(|| VideoEditorError::Io("Failed to create project".into()))
+        self.current_project
+            .as_mut()
+            .ok_or_else(|| VideoEditorError::Io("Failed to create project".into()))
     }
 
     /// Creates a project from a template.
     pub fn new_from_template(
-        &mut self,
-        template_name: &str,
-        project_name: impl Into<String>,
+        &mut self, template_name: &str, project_name: impl Into<String>,
     ) -> VideoEditorResult<&mut Project> {
-        let template = self.templates
+        let template = self
+            .templates
             .iter()
             .find(|t| t.name == template_name)
             .ok_or_else(|| VideoEditorError::Io(format!("Template not found: {template_name}")))?
             .clone();
 
-        if let Some(project) = &self.current_project && project.has_unsaved_changes() {
+        if let Some(project) = &self.current_project
+            && project.has_unsaved_changes()
+        {
             return Err(VideoEditorError::Io(
                 "Current project has unsaved changes".into(),
             ));
@@ -644,7 +643,9 @@ impl ProjectManager {
 
         self.current_project = Some(project);
 
-        self.current_project.as_mut().ok_or_else(|| VideoEditorError::Io("Failed to create project".into()))
+        self.current_project
+            .as_mut()
+            .ok_or_else(|| VideoEditorError::Io("Failed to create project".into()))
     }
 
     /// Returns the current project.
@@ -660,10 +661,10 @@ impl ProjectManager {
 
     /// Closes the current project.
     pub fn close_project(&mut self) -> VideoEditorResult<()> {
-        if let Some(project) = &self.current_project && project.has_unsaved_changes() {
-            return Err(VideoEditorError::Io(
-                "Project has unsaved changes".into(),
-            ));
+        if let Some(project) = &self.current_project
+            && project.has_unsaved_changes()
+        {
+            return Err(VideoEditorError::Io("Project has unsaved changes".into()));
         }
         self.current_project = None;
         Ok(())
@@ -678,16 +679,13 @@ impl ProjectManager {
         self.recent_files.retain(|r| r.path != path);
 
         // Add to front
-        self.recent_files.insert(
-            0,
-            RecentFile {
-                path,
-                name,
-                last_opened: Timestamp::now(),
-                exists:      true,
-                thumbnail:   None,
-            },
-        );
+        self.recent_files.insert(0, RecentFile {
+            path,
+            name,
+            last_opened: Timestamp::now(),
+            exists: true,
+            thumbnail: None,
+        });
 
         // Trim to max
         if self.recent_files.len() > self.max_recent {
@@ -781,7 +779,12 @@ mod tests {
         let result = manager.new_from_template("HD 1080p", "My Project");
 
         assert!(result.is_ok());
-        let project = manager.current_project().unwrap();
+        let project = match manager.current_project() {
+            Some(v) => v,
+            None => {
+                panic!("Unexpected None: {}", "unwrap conversion");
+            },
+        };
         assert_eq!(project.settings().timeline_width, 1920);
         assert_eq!(project.settings().timeline_height, 1080);
     }

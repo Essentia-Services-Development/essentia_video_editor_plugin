@@ -69,3 +69,4 @@ impl std::error::Error for VideoEditorError {}
 
 /// Result type for video editor operations.
 pub type VideoEditorResult<T> = Result<T, VideoEditorError>;
+

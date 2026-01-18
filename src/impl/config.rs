@@ -31,3 +31,4 @@ impl Default for VideoEditorConfig {
         }
     }
 }
+

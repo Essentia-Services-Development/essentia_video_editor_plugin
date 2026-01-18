@@ -39,3 +39,4 @@ impl Default for GpuPipeline {
         Self::new(true)
     }
 }
+

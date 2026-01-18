@@ -74,7 +74,7 @@ impl InterpolationType {
                 } else {
                     1.0 - (-2.0 * t + 2.0).powi(2) / 2.0
                 }
-            }
+            },
             Self::CubicIn => t * t * t,
             Self::CubicOut => 1.0 - (1.0 - t).powi(3),
             Self::CubicInOut => {
@@ -83,21 +83,21 @@ impl InterpolationType {
                 } else {
                     1.0 - (-2.0 * t + 2.0).powi(3) / 2.0
                 }
-            }
+            },
             Self::ExponentialIn => {
                 if t == 0.0 {
                     0.0
                 } else {
                     2.0_f64.powf(10.0 * t - 10.0)
                 }
-            }
+            },
             Self::ExponentialOut => {
                 if (t - 1.0).abs() < f64::EPSILON {
                     1.0
                 } else {
                     1.0 - 2.0_f64.powf(-10.0 * t)
                 }
-            }
+            },
             Self::Bounce => {
                 let n1 = 7.5625;
                 let d1 = 2.75;
@@ -115,7 +115,7 @@ impl InterpolationType {
                     n1 * t * t + 0.984375
                 };
                 1.0 - bounce
-            }
+            },
             Self::Elastic => {
                 let c4 = (2.0 * core::f64::consts::PI) / 3.0;
                 if t == 0.0 {
@@ -125,7 +125,7 @@ impl InterpolationType {
                 } else {
                     2.0_f64.powf(-10.0 * t) * ((t * 10.0 - 0.75) * c4).sin() + 1.0
                 }
-            }
+            },
         }
     }
 }
@@ -180,10 +180,10 @@ impl AnimatedValue {
             (Self::Float(a), Self::Float(b)) => Self::Float(a + t * (b - a)),
             (Self::Vec2(ax, ay), Self::Vec2(bx, by)) => {
                 Self::Vec2(ax + t * (bx - ax), ay + t * (by - ay))
-            }
+            },
             (Self::Vec3(ax, ay, az), Self::Vec3(bx, by, bz)) => {
                 Self::Vec3(ax + t * (bx - ax), ay + t * (by - ay), az + t * (bz - az))
-            }
+            },
             (Self::Vec4(ax, ay, az, aw), Self::Vec4(bx, by, bz, bw)) => Self::Vec4(
                 ax + t * (bx - ax),
                 ay + t * (by - ay),
@@ -197,7 +197,9 @@ impl AnimatedValue {
                 aa + t as f32 * (ba - aa),
             ),
             (Self::Bool(a), Self::Bool(_)) => Self::Bool(*a), // Can't interpolate booleans
-            (Self::Int(a), Self::Int(b)) => Self::Int(((*a as f64) + t * (*b as f64 - *a as f64)) as i64),
+            (Self::Int(a), Self::Int(b)) => {
+                Self::Int(((*a as f64) + t * (*b as f64 - *a as f64)) as i64)
+            },
             _ => *self, // Mismatched types, return first
         }
     }
@@ -231,17 +233,17 @@ impl Default for AnimatedValue {
 #[derive(Debug, Clone)]
 pub struct Keyframe {
     /// Time position of keyframe.
-    time:           TimePosition,
+    time:          TimePosition,
     /// Value at this keyframe.
-    value:          AnimatedValue,
+    value:         AnimatedValue,
     /// Interpolation to next keyframe.
-    interpolation:  InterpolationType,
+    interpolation: InterpolationType,
     /// Incoming bezier handle.
-    handle_in:      BezierHandle,
+    handle_in:     BezierHandle,
     /// Outgoing bezier handle.
-    handle_out:     BezierHandle,
+    handle_out:    BezierHandle,
     /// Whether keyframe is selected (for UI).
-    selected:       bool,
+    selected:      bool,
 }
 
 impl Keyframe {
@@ -252,9 +254,9 @@ impl Keyframe {
             time,
             value,
             interpolation: InterpolationType::default(),
-            handle_in:     BezierHandle::flat(),
-            handle_out:    BezierHandle::flat(),
-            selected:      false,
+            handle_in: BezierHandle::flat(),
+            handle_out: BezierHandle::flat(),
+            selected: false,
         }
     }
 
@@ -357,7 +359,9 @@ pub enum AnimationLoopMode {
 impl AnimationTrack {
     /// Creates a new animation track.
     #[must_use]
-    pub fn new(id: AnimationTrackId, property: impl Into<String>, default_value: AnimatedValue) -> Self {
+    pub fn new(
+        id: AnimationTrackId, property: impl Into<String>, default_value: AnimatedValue,
+    ) -> Self {
         Self {
             id,
             property: property.into(),
@@ -425,7 +429,11 @@ impl AnimationTrack {
         let keyframe = Keyframe::new(time, value);
 
         // Find insertion point (maintain sorted order)
-        let pos = self.keyframes.iter().position(|k| k.time().ms > time.ms).unwrap_or(self.keyframes.len());
+        let pos = self
+            .keyframes
+            .iter()
+            .position(|k| k.time().ms > time.ms)
+            .unwrap_or(self.keyframes.len());
 
         // Check if keyframe already exists at this time
         if pos > 0 && self.keyframes[pos - 1].time().ms == time.ms {
@@ -504,7 +512,11 @@ impl AnimationTrack {
                 // Calculate interpolation factor
                 let duration = (next_kf.time().ms - prev_kf.time().ms) as f64;
                 let elapsed = (time.ms - prev_kf.time().ms) as f64;
-                let t = if duration > 0.0 { elapsed / duration } else { 0.0 };
+                let t = if duration > 0.0 {
+                    elapsed / duration
+                } else {
+                    0.0
+                };
 
                 // Apply easing
                 let eased_t = if prev_kf.interpolation() == InterpolationType::Bezier {
@@ -515,14 +527,15 @@ impl AnimationTrack {
 
                 // Interpolate values
                 prev_kf.value.lerp(&next_kf.value, eased_t)
-            }
+            },
         }
     }
 
     /// Evaluates bezier interpolation.
     fn evaluate_bezier(&self, t: f64, prev: &Keyframe, next: &Keyframe) -> f64 {
         // Cubic bezier evaluation
-        // P0 = (0, 0), P1 = prev.handle_out, P2 = (1-next.handle_in.x, next.handle_in.y), P3 = (1, 1)
+        // P0 = (0, 0), P1 = prev.handle_out, P2 = (1-next.handle_in.x,
+        // next.handle_in.y), P3 = (1, 1)
         let p1x = prev.handle_out().x.clamp(0.0, 1.0);
         let p1y = prev.handle_out().y;
         let p2x = (1.0 - next.handle_in().x).clamp(0.0, 1.0);
@@ -584,7 +597,12 @@ impl AnimationTrack {
     /// Returns selected keyframe indices.
     #[must_use]
     pub fn selected_indices(&self) -> Vec<usize> {
-        self.keyframes.iter().enumerate().filter(|(_, k)| k.selected).map(|(i, _)| i).collect()
+        self.keyframes
+            .iter()
+            .enumerate()
+            .filter(|(_, k)| k.selected)
+            .map(|(i, _)| i)
+            .collect()
     }
 }
 
@@ -607,13 +625,7 @@ impl AnimationLayer {
     /// Creates a new animation layer.
     #[must_use]
     pub fn new(name: impl Into<String>, target_id: u64) -> Self {
-        Self {
-            name: name.into(),
-            tracks: Vec::new(),
-            next_id: 1,
-            target_id,
-            enabled: true,
-        }
+        Self { name: name.into(), tracks: Vec::new(), next_id: 1, target_id, enabled: true }
     }
 
     /// Returns the layer name.
@@ -635,7 +647,9 @@ impl AnimationLayer {
     }
 
     /// Creates a new animation track for a property.
-    pub fn create_track(&mut self, property: impl Into<String>, default_value: AnimatedValue) -> AnimationTrackId {
+    pub fn create_track(
+        &mut self, property: impl Into<String>, default_value: AnimatedValue,
+    ) -> AnimationTrackId {
         let id = AnimationTrackId::new(self.next_id);
         self.next_id += 1;
 
@@ -695,7 +709,11 @@ impl AnimationLayer {
     /// Returns the total duration across all tracks.
     #[must_use]
     pub fn duration(&self) -> TimePosition {
-        self.tracks.iter().map(|t| t.duration()).max_by(|a, b| a.ms.cmp(&b.ms)).unwrap_or_default()
+        self.tracks
+            .iter()
+            .map(|t| t.duration())
+            .max_by(|a, b| a.ms.cmp(&b.ms))
+            .unwrap_or_default()
     }
 }
 
@@ -740,15 +758,19 @@ impl AnimationManager {
 
     /// Creates a new animation layer.
     ///
-    /// # Panics
+    /// Creates a new animation layer and returns a mutable reference to it.
     ///
-    /// This function should never panic as the layer is added immediately before access.
-    /// The unwrap is safe due to the immediate push operation.
-    #[allow(clippy::unwrap_used)]
-    pub fn create_layer(&mut self, name: impl Into<String>, target_id: u64) -> &mut AnimationLayer {
+    /// # Errors
+    ///
+    /// Returns `VideoEditorError::Timeline` if the layer cannot be created.
+    pub fn create_layer(
+        &mut self, name: impl Into<String>, target_id: u64,
+    ) -> crate::errors::VideoEditorResult<&mut AnimationLayer> {
         self.layers.push(AnimationLayer::new(name, target_id));
         // SAFETY: Element was just pushed, so last_mut will always succeed
-        self.layers.last_mut().unwrap()
+        self.layers.last_mut().ok_or_else(|| {
+            crate::VideoEditorError::Timeline("Layer was just added but not found".to_string())
+        })
     }
 
     /// Gets an animation layer by target ID.

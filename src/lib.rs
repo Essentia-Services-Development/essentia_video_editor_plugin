@@ -132,3 +132,4 @@ mod tests {
         assert!(config.max_tracks > 0);
     }
 }
+

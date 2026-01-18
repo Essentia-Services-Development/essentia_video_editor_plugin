@@ -498,3 +498,4 @@ pub enum OptimizationLevel {
     /// Size optimization.
     Size,
 }
+

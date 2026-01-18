@@ -499,3 +499,4 @@ mod tests {
         assert_eq!(branch.frame_number, 50);
     }
 }
+
