@@ -824,8 +824,8 @@ mod tests {
     #[test]
     fn test_solo_logic() {
         let mut mixer = AudioMixer::new(48000, 1024);
-        mixer.add_track(1, "Track 1");
-        mixer.add_track(2, "Track 2");
+        let _ = mixer.add_track(1, "Track 1");
+        let _ = mixer.add_track(2, "Track 2");
 
         assert!(mixer.is_track_audible(1));
         assert!(mixer.is_track_audible(2));

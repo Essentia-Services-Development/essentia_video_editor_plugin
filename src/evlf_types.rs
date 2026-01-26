@@ -249,23 +249,41 @@ impl TrackFlags {
 #[repr(u8)]
 pub enum BlendMode {
     #[default]
+    /// Normal blending mode - no blending applied
     Normal     = 0,
+    /// Multiply blending mode - multiplies base and blend colors
     Multiply   = 1,
+    /// Screen blending mode - inverts, multiplies, then inverts again
     Screen     = 2,
+    /// Overlay blending mode - combines multiply and screen based on base color
     Overlay    = 3,
+    /// Darken blending mode - selects the darker of base and blend colors
     Darken     = 4,
+    /// Lighten blending mode - selects the lighter of base and blend colors
     Lighten    = 5,
+    /// Color Dodge blending mode - brightens base color based on blend color
     ColorDodge = 6,
+    /// Color Burn blending mode - darkens base color based on blend color
     ColorBurn  = 7,
+    /// Hard Light blending mode - like overlay but uses blend color as base
     HardLight  = 8,
+    /// Soft Light blending mode - softer version of hard light
     SoftLight  = 9,
+    /// Difference blending mode - absolute difference between colors
     Difference = 10,
+    /// Exclusion blending mode - similar to difference but lower contrast
     Exclusion  = 11,
+    /// Hue blending mode - uses hue from blend color with saturation/luminance from base
     Hue        = 12,
+    /// Saturation blending mode - uses saturation from blend color with hue/luminance from base
     Saturation = 13,
+    /// Color blending mode - uses hue and saturation from blend color with luminance from base
     Color      = 14,
+    /// Luminosity blending mode - uses luminance from blend color with hue/saturation from base
     Luminosity = 15,
+    /// Add blending mode - adds base and blend colors
     Add        = 16,
+    /// Subtract blending mode - subtracts blend color from base color
     Subtract   = 17,
 }
 
@@ -499,4 +517,3 @@ mod tests {
         assert_eq!(branch.frame_number, 50);
     }
 }
-

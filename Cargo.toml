@@ -20,6 +20,7 @@ essentia_ffui = { workspace = true }
 essentia_gpu_accel_kernel = { workspace = true }
 essentia_time = { workspace = true }
 essentia_color_types = { workspace = true }
+essentia_utils = { workspace = true }
 [dev-dependencies]
 [features]
 full-tests = []
@@ -27,3 +28,6 @@ default = []
 gpu = []
 [lib]
 path = "src/lib.rs"
+
+[lints]
+workspace = true
