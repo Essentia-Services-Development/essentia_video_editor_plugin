@@ -1,0 +1,33 @@
+[package]
+name = "essentia_video_editor_plugin"
+    repository        = { workspace = true }
+    readme            = { workspace = true }
+    keywords          = { workspace = true }
+    categories        = { workspace = true }
+description = "AI-enhanced video editing with GPU acceleration"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[dependencies]
+# Core dependencies (workspace inheritance)
+essentia_core     = { workspace = true }
+essentia_traits     = { workspace = true }
+essentia_plugin_system     = { workspace = true }
+essentia_ffui     = { workspace = true }
+essentia_gpu_accel_kernel     = { workspace = true }
+essentia_time     = { workspace = true }
+essentia_color_types     = { workspace = true }
+essentia_utils     = { workspace = true }
+[dev-dependencies]
+[features]
+full-tests = []
+default = []
+gpu = []
+[lib]
+path = "src/lib.rs"
+
+
+
