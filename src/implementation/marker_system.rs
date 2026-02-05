@@ -4,8 +4,10 @@
 //! Features: Marker types, marker filtering, chapters,
 //! import/export, and navigation helpers.
 
-use crate::errors::{VideoEditorError, VideoEditorResult};
-use crate::types::{TimePosition, Timestamp};
+use crate::{
+    errors::{VideoEditorError, VideoEditorResult},
+    types::{TimePosition, Timestamp},
+};
 
 /// Unique identifier for a marker.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
@@ -334,19 +336,19 @@ impl Marker {
 #[derive(Debug, Clone, Default)]
 pub struct MarkerFilter {
     /// Filter by marker type.
-    pub marker_type: Option<MarkerType>,
+    pub marker_type:    Option<MarkerType>,
     /// Filter by tag.
-    pub tag:         Option<String>,
+    pub tag:            Option<String>,
     /// Filter by author.
-    pub author:      Option<String>,
+    pub author:         Option<String>,
     /// Filter by time range (start).
-    pub range_start: Option<TimePosition>,
+    pub range_start:    Option<TimePosition>,
     /// Filter by time range (end).
-    pub range_end:   Option<TimePosition>,
+    pub range_end:      Option<TimePosition>,
     /// Include locked markers.
     pub include_locked: bool,
     /// Search text (name or comment).
-    pub search_text: Option<String>,
+    pub search_text:    Option<String>,
 }
 
 impl MarkerFilter {
@@ -381,23 +383,33 @@ impl MarkerFilter {
     /// Checks if a marker matches the filter.
     #[must_use]
     pub fn matches(&self, marker: &Marker) -> bool {
-        if let Some(mt) = self.marker_type && marker.marker_type() != mt {
+        if let Some(mt) = self.marker_type
+            && marker.marker_type() != mt
+        {
             return false;
         }
 
-        if let Some(tag) = &self.tag && !marker.has_tag(tag) {
+        if let Some(tag) = &self.tag
+            && !marker.has_tag(tag)
+        {
             return false;
         }
 
-        if let Some(author) = &self.author && marker.author() != Some(author.as_str()) {
+        if let Some(author) = &self.author
+            && marker.author() != Some(author.as_str())
+        {
             return false;
         }
 
-        if let Some(start) = self.range_start && marker.position().ms < start.ms {
+        if let Some(start) = self.range_start
+            && marker.position().ms < start.ms
+        {
             return false;
         }
 
-        if let Some(end) = self.range_end && marker.position().ms > end.ms {
+        if let Some(end) = self.range_end
+            && marker.position().ms > end.ms
+        {
             return false;
         }
 
@@ -421,13 +433,13 @@ impl MarkerFilter {
 /// Manager for timeline markers.
 pub struct MarkerManager {
     /// All markers (sorted by position).
-    markers:      Vec<Marker>,
+    markers:    Vec<Marker>,
     /// Next marker ID.
-    next_id:      u64,
+    next_id:    u64,
     /// Available tags (for autocomplete).
-    known_tags:   Vec<String>,
+    known_tags: Vec<String>,
     /// Selection state (selected marker IDs).
-    selection:    Vec<MarkerId>,
+    selection:  Vec<MarkerId>,
 }
 
 impl MarkerManager {
@@ -455,7 +467,11 @@ impl MarkerManager {
         let marker = Marker::new(id, position, marker_type);
 
         // Insert in sorted order
-        let pos = self.markers.iter().position(|m| m.position().ms > position.ms).unwrap_or(self.markers.len());
+        let pos = self
+            .markers
+            .iter()
+            .position(|m| m.position().ms > position.ms)
+            .unwrap_or(self.markers.len());
         self.markers.insert(pos, marker);
 
         id
@@ -466,7 +482,11 @@ impl MarkerManager {
         let id = self.next_id();
         let marker = Marker::chapter(id, position, name);
 
-        let pos = self.markers.iter().position(|m| m.position().ms > position.ms).unwrap_or(self.markers.len());
+        let pos = self
+            .markers
+            .iter()
+            .position(|m| m.position().ms > position.ms)
+            .unwrap_or(self.markers.len());
         self.markers.insert(pos, marker);
 
         id
@@ -519,9 +539,9 @@ impl MarkerManager {
     /// Gets the nearest marker to a position.
     #[must_use]
     pub fn nearest_marker(&self, position: TimePosition) -> Option<&Marker> {
-        self.markers.iter().min_by_key(|m| {
-            (m.position().ms as i64 - position.ms as i64).unsigned_abs()
-        })
+        self.markers
+            .iter()
+            .min_by_key(|m| (m.position().ms as i64 - position.ms as i64).unsigned_abs())
     }
 
     /// Gets the next marker after a position.
@@ -543,9 +563,12 @@ impl MarkerManager {
     }
 
     /// Moves a marker to a new position.
-    pub fn move_marker(&mut self, id: MarkerId, new_position: TimePosition) -> VideoEditorResult<()> {
+    pub fn move_marker(
+        &mut self, id: MarkerId, new_position: TimePosition,
+    ) -> VideoEditorResult<()> {
         // Find and update marker
-        let marker = self.markers
+        let marker = self
+            .markers
             .iter_mut()
             .find(|m| m.id() == id)
             .ok_or_else(|| VideoEditorError::Timeline("Marker not found".into()))?;
@@ -592,19 +615,15 @@ impl MarkerManager {
     /// Returns selected markers.
     #[must_use]
     pub fn selected_markers(&self) -> Vec<&Marker> {
-        self.selection
-            .iter()
-            .filter_map(|&id| self.get_marker(id))
-            .collect()
+        self.selection.iter().filter_map(|&id| self.get_marker(id)).collect()
     }
 
     /// Deletes selected markers.
     pub fn delete_selection(&mut self) {
-        let to_delete: Vec<_> = self.selection
+        let to_delete: Vec<_> = self
+            .selection
             .iter()
-            .filter(|&&id| {
-                self.get_marker(id).map(|m| !m.is_locked()).unwrap_or(false)
-            })
+            .filter(|&&id| self.get_marker(id).map(|m| !m.is_locked()).unwrap_or(false))
             .copied()
             .collect();
 
@@ -642,11 +661,8 @@ impl MarkerManager {
 
     /// Clears all markers.
     pub fn clear(&mut self) {
-        let to_remove: Vec<_> = self.markers
-            .iter()
-            .filter(|m| !m.is_locked())
-            .map(|m| m.id())
-            .collect();
+        let to_remove: Vec<_> =
+            self.markers.iter().filter(|m| !m.is_locked()).map(|m| m.id()).collect();
 
         for id in to_remove {
             self.markers.retain(|m| m.id() != id);

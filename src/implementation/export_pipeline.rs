@@ -4,8 +4,10 @@
 //! Features: Render queue, format encoding, codec configuration,
 //! progress tracking, and multi-format export.
 
-use crate::errors::{VideoEditorError, VideoEditorResult};
-use crate::types::{FrameRate, Resolution, TimePosition, Timestamp};
+use crate::{
+    errors::{VideoEditorError, VideoEditorResult},
+    types::{FrameRate, Resolution, TimePosition, Timestamp},
+};
 
 /// Unique identifier for an export job.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
@@ -308,41 +310,39 @@ impl Default for AudioEncodingSettings {
 #[derive(Debug, Clone, Default)]
 pub struct ExportSettings {
     /// Container format.
-    pub container:      ContainerFormat,
+    pub container:   ContainerFormat,
     /// Video settings.
-    pub video:          VideoEncodingSettings,
+    pub video:       VideoEncodingSettings,
     /// Audio settings.
-    pub audio:          AudioEncodingSettings,
+    pub audio:       AudioEncodingSettings,
     /// Output file path.
-    pub output_path:    String,
+    pub output_path: String,
     /// Range to export (None = entire timeline).
-    pub range:          Option<(TimePosition, TimePosition)>,
+    pub range:       Option<(TimePosition, TimePosition)>,
     /// Enable multi-pass encoding.
-    pub multi_pass:     bool,
+    pub multi_pass:  bool,
     /// Metadata to embed.
-    pub metadata:       ExportMetadata,
+    pub metadata:    ExportMetadata,
 }
 
 /// Metadata to embed in exported file.
 #[derive(Debug, Clone, Default)]
 pub struct ExportMetadata {
     /// Title.
-    pub title:       Option<String>,
+    pub title:     Option<String>,
     /// Artist/author.
-    pub artist:      Option<String>,
+    pub artist:    Option<String>,
     /// Album/collection.
-    pub album:       Option<String>,
+    pub album:     Option<String>,
     /// Year.
-    pub year:        Option<u16>,
+    pub year:      Option<u16>,
     /// Comment.
-    pub comment:     Option<String>,
+    pub comment:   Option<String>,
     /// Copyright notice.
-    pub copyright:   Option<String>,
+    pub copyright: Option<String>,
     /// Custom key-value metadata.
-    pub custom:      Vec<(String, String)>,
+    pub custom:    Vec<(String, String)>,
 }
-
-
 
 /// Export job status.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Default)]
@@ -374,25 +374,25 @@ pub enum ExportStatus {
 #[derive(Debug, Clone)]
 pub struct ExportProgress {
     /// Current status.
-    pub status:           ExportStatus,
+    pub status:          ExportStatus,
     /// Progress percentage (0.0 to 1.0).
-    pub progress:         f64,
+    pub progress:        f64,
     /// Frames encoded so far.
-    pub frames_encoded:   u64,
+    pub frames_encoded:  u64,
     /// Total frames to encode.
-    pub total_frames:     u64,
+    pub total_frames:    u64,
     /// Current frame rate (fps).
-    pub encoding_fps:     f64,
+    pub encoding_fps:    f64,
     /// Estimated time remaining in seconds.
-    pub eta_seconds:      Option<f64>,
+    pub eta_seconds:     Option<f64>,
     /// Current file size in bytes.
-    pub current_size:     u64,
+    pub current_size:    u64,
     /// Estimated final size in bytes.
-    pub estimated_size:   Option<u64>,
+    pub estimated_size:  Option<u64>,
     /// Current bitrate in kbps.
-    pub current_bitrate:  f64,
+    pub current_bitrate: f64,
     /// Error message if failed.
-    pub error_message:    Option<String>,
+    pub error_message:   Option<String>,
 }
 
 impl ExportProgress {
@@ -400,16 +400,16 @@ impl ExportProgress {
     #[must_use]
     pub fn new(total_frames: u64) -> Self {
         Self {
-            status:          ExportStatus::Queued,
-            progress:        0.0,
-            frames_encoded:  0,
+            status: ExportStatus::Queued,
+            progress: 0.0,
+            frames_encoded: 0,
             total_frames,
-            encoding_fps:    0.0,
-            eta_seconds:     None,
-            current_size:    0,
-            estimated_size:  None,
+            encoding_fps: 0.0,
+            eta_seconds: None,
+            current_size: 0,
+            estimated_size: None,
             current_bitrate: 0.0,
-            error_message:   None,
+            error_message: None,
         }
     }
 
@@ -434,7 +434,10 @@ impl ExportProgress {
     /// Returns whether the export is complete.
     #[must_use]
     pub fn is_complete(&self) -> bool {
-        matches!(self.status, ExportStatus::Completed | ExportStatus::Failed | ExportStatus::Cancelled)
+        matches!(
+            self.status,
+            ExportStatus::Completed | ExportStatus::Failed | ExportStatus::Cancelled
+        )
     }
 }
 
@@ -463,10 +466,7 @@ impl ExportJob {
     /// Creates a new export job.
     #[must_use]
     pub fn new(
-        id: ExportJobId,
-        project_id: u64,
-        settings: ExportSettings,
-        total_frames: u64,
+        id: ExportJobId, project_id: u64, settings: ExportSettings, total_frames: u64,
     ) -> Self {
         Self {
             id,
@@ -564,15 +564,15 @@ impl ExportJob {
 /// Export queue manager.
 pub struct ExportQueue {
     /// All export jobs.
-    jobs:       Vec<ExportJob>,
+    jobs:           Vec<ExportJob>,
     /// Next job ID.
-    next_id:    u64,
+    next_id:        u64,
     /// Currently encoding job.
-    current:    Option<ExportJobId>,
+    current:        Option<ExportJobId>,
     /// Maximum concurrent exports.
     max_concurrent: usize,
     /// Active job count.
-    active_count: usize,
+    active_count:   usize,
 }
 
 impl ExportQueue {
@@ -597,10 +597,7 @@ impl ExportQueue {
 
     /// Adds a new export job to the queue.
     pub fn add_job(
-        &mut self,
-        project_id: u64,
-        settings: ExportSettings,
-        total_frames: u64,
+        &mut self, project_id: u64, settings: ExportSettings, total_frames: u64,
     ) -> ExportJobId {
         let id = self.next_id();
         let job = ExportJob::new(id, project_id, settings, total_frames);
@@ -645,7 +642,8 @@ impl ExportQueue {
     /// Returns queued jobs in priority order.
     #[must_use]
     pub fn queued_jobs(&self) -> Vec<&ExportJob> {
-        let mut queued: Vec<_> = self.jobs
+        let mut queued: Vec<_> = self
+            .jobs
             .iter()
             .filter(|j| matches!(j.progress().status, ExportStatus::Queued))
             .collect();
@@ -715,11 +713,14 @@ impl ExportQueue {
 
     /// Cancels a job.
     pub fn cancel_job(&mut self, id: ExportJobId) -> VideoEditorResult<()> {
-        let job = self.get_job_mut(id)
+        let job = self
+            .get_job_mut(id)
             .ok_or_else(|| VideoEditorError::Export("Job not found".into()))?;
 
         if job.progress().is_complete() {
-            return Err(VideoEditorError::Export("Cannot cancel completed job".into()));
+            return Err(VideoEditorError::Export(
+                "Cannot cancel completed job".into(),
+            ));
         }
 
         job.cancel();
@@ -733,11 +734,17 @@ impl ExportQueue {
 
     /// Retries a failed job.
     pub fn retry_job(&mut self, id: ExportJobId) -> VideoEditorResult<ExportJobId> {
-        let job = self.get_job(id)
+        let job = self
+            .get_job(id)
             .ok_or_else(|| VideoEditorError::Export("Job not found".into()))?;
 
-        if !matches!(job.progress().status, ExportStatus::Failed | ExportStatus::Cancelled) {
-            return Err(VideoEditorError::Export("Can only retry failed/cancelled jobs".into()));
+        if !matches!(
+            job.progress().status,
+            ExportStatus::Failed | ExportStatus::Cancelled
+        ) {
+            return Err(VideoEditorError::Export(
+                "Can only retry failed/cancelled jobs".into(),
+            ));
         }
 
         // Clone settings and create new job
@@ -755,7 +762,12 @@ impl ExportQueue {
 
     /// Clears failed jobs from the queue.
     pub fn clear_failed(&mut self) {
-        self.jobs.retain(|j| !matches!(j.progress().status, ExportStatus::Failed | ExportStatus::Cancelled));
+        self.jobs.retain(|j| {
+            !matches!(
+                j.progress().status,
+                ExportStatus::Failed | ExportStatus::Cancelled
+            )
+        });
     }
 }
 
@@ -810,17 +822,17 @@ impl ExportPreset {
             category:    PresetCategory::Social,
             settings:    ExportSettings {
                 container: ContainerFormat::Mp4,
-                video:     VideoEncodingSettings {
-                    codec:        VideoCodec::H264,
-                    resolution:   Resolution::new(1920, 1080),
-                    frame_rate:   FrameRate::new(30, 1),
-                    bitrate:      12000,
-                    quality:      20,
+                video: VideoEncodingSettings {
+                    codec: VideoCodec::H264,
+                    resolution: Resolution::new(1920, 1080),
+                    frame_rate: FrameRate::new(30, 1),
+                    bitrate: 12000,
+                    quality: 20,
                     rate_control: RateControl::Vbr,
-                    preset:       EncodingPreset::Slow,
+                    preset: EncodingPreset::Slow,
                     ..Default::default()
                 },
-                audio:     AudioEncodingSettings {
+                audio: AudioEncodingSettings {
                     codec:       AudioCodec::Aac,
                     bitrate:     256,
                     sample_rate: 48000,
@@ -849,17 +861,17 @@ impl ExportPreset {
             category:    PresetCategory::Social,
             settings:    ExportSettings {
                 container: ContainerFormat::Mp4,
-                video:     VideoEncodingSettings {
-                    codec:        VideoCodec::H264,
-                    resolution:   Resolution::new(3840, 2160),
-                    frame_rate:   FrameRate::new(30, 1),
-                    bitrate:      45000,
-                    quality:      18,
+                video: VideoEncodingSettings {
+                    codec: VideoCodec::H264,
+                    resolution: Resolution::new(3840, 2160),
+                    frame_rate: FrameRate::new(30, 1),
+                    bitrate: 45000,
+                    quality: 18,
                     rate_control: RateControl::Vbr,
-                    preset:       EncodingPreset::Slow,
+                    preset: EncodingPreset::Slow,
                     ..Default::default()
                 },
-                audio:     AudioEncodingSettings {
+                audio: AudioEncodingSettings {
                     codec:       AudioCodec::Aac,
                     bitrate:     384,
                     sample_rate: 48000,
@@ -886,17 +898,17 @@ impl ExportPreset {
             category:    PresetCategory::Archive,
             settings:    ExportSettings {
                 container: ContainerFormat::Mov,
-                video:     VideoEncodingSettings {
-                    codec:        VideoCodec::ProRes(ProResProfile::Hq),
-                    resolution:   Resolution::new(1920, 1080),
-                    frame_rate:   FrameRate::new(24, 1),
-                    bitrate:      220000, // ~220 Mbps
-                    quality:      0,
+                video: VideoEncodingSettings {
+                    codec: VideoCodec::ProRes(ProResProfile::Hq),
+                    resolution: Resolution::new(1920, 1080),
+                    frame_rate: FrameRate::new(24, 1),
+                    bitrate: 220000, // ~220 Mbps
+                    quality: 0,
                     rate_control: RateControl::ConstantQuality,
                     pixel_format: PixelFormat::Yuv422p10,
                     ..Default::default()
                 },
-                audio:     AudioEncodingSettings {
+                audio: AudioEncodingSettings {
                     codec:       AudioCodec::Pcm,
                     bitrate:     0, // N/A for PCM
                     sample_rate: 48000,

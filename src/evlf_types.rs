@@ -273,13 +273,17 @@ pub enum BlendMode {
     Difference = 10,
     /// Exclusion blending mode - similar to difference but lower contrast
     Exclusion  = 11,
-    /// Hue blending mode - uses hue from blend color with saturation/luminance from base
+    /// Hue blending mode - uses hue from blend color with saturation/luminance
+    /// from base
     Hue        = 12,
-    /// Saturation blending mode - uses saturation from blend color with hue/luminance from base
+    /// Saturation blending mode - uses saturation from blend color with
+    /// hue/luminance from base
     Saturation = 13,
-    /// Color blending mode - uses hue and saturation from blend color with luminance from base
+    /// Color blending mode - uses hue and saturation from blend color with
+    /// luminance from base
     Color      = 14,
-    /// Luminosity blending mode - uses luminance from blend color with hue/saturation from base
+    /// Luminosity blending mode - uses luminance from blend color with
+    /// hue/saturation from base
     Luminosity = 15,
     /// Add blending mode - adds base and blend colors
     Add        = 16,

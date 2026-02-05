@@ -55,10 +55,6 @@ impl ColorSpace {
     }
 }
 
-
-
-
-
 /// Color wheel adjustment (shadows/midtones/highlights).
 #[derive(Debug, Clone, Copy, Default)]
 pub struct ColorWheel {
