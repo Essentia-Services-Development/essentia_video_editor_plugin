@@ -54,6 +54,7 @@
 #![allow(clippy::unnecessary_literal_bound)]
 #![allow(clippy::missing_fields_in_debug)]
 #![allow(clippy::semicolon_if_nothing_returned)]
+#![allow(clippy::unnecessary_sort_by)]
 
 //! ## Architecture
 //!
