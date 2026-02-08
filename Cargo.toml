@@ -16,7 +16,7 @@ publish.workspace = true
 essentia_core     = { workspace = true }
 essentia_traits     = { workspace = true }
 essentia_plugin_system     = { workspace = true }
-essentia_ffui     = { workspace = true }
+essentia_editor_core     = { workspace = true }
 essentia_gpu_accel_kernel     = { workspace = true }
 essentia_time     = { workspace = true }
 essentia_color_types     = { workspace = true }
@@ -28,6 +28,3 @@ default = []
 gpu = []
 [lib]
 path = "src/lib.rs"
-
-
-
